@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sunday — Birthday SMS Drafter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f7f2ea;
+      --surface: #fffaf3;
+      --ink: #201b18;
+      --body: #3d3630;
+      --muted: #7f746b;
+      --divider: #e5dbcf;
+      --rose: #800020;
+      --rose-soft: #f4e5e9;
+      --ok: #217a57;
+      --shadow: 0 18px 45px rgba(32, 27, 24, .09);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+    .page {
+      min-height: 100vh;
+      padding: 22px;
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: min(430px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--divider);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .topbar {
+      padding: 18px 20px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--divider);
+      background: rgba(255,250,243,.88);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 650;
+      letter-spacing: -.02em;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--rose);
+      box-shadow: 0 0 0 5px var(--rose-soft);
+    }
+    .date-pill {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--divider);
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: #fff;
+    }
+    .hero { padding: 24px 20px 16px; }
+    .eyebrow {
+      font-size: 12px;
+      color: var(--rose);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 39px;
+      line-height: .95;
+      font-weight: 400;
+      letter-spacing: -.04em;
+      margin: 0;
+    }
+    .subtitle {
+      color: var(--body);
+      margin: 12px 0 0;
+      font-size: 14px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 0 20px 18px;
+    }
+    .stat {
+      background: #fff;
+      border: 1px solid var(--divider);
+      border-radius: 18px;
+      padding: 11px 10px;
+    }
+    .stat strong { display: block; font-size: 19px; letter-spacing: -.04em; }
+    .stat span { color: var(--muted); font-size: 11px; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px 16px;
+    }
+    .tab {
+      border: 1px solid var(--divider);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+    .list { padding: 0 14px 20px; display: grid; gap: 12px; }
+    .card {
+      background: #fff;
+      border: 1px solid var(--divider);
+      border-radius: 24px;
+      padding: 16px;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(32,27,24,.06); }
+    .person {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .name { font-weight: 700; letter-spacing: -.03em; font-size: 16px; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .lang {
+      white-space: nowrap;
+      height: max-content;
+      background: var(--rose-soft);
+      color: var(--rose);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .note {
+      color: var(--body);
+      font-size: 13px;
+      background: #fbf7f1;
+      border: 1px solid var(--divider);
+      border-radius: 16px;
+      padding: 10px 11px;
+      margin-bottom: 12px;
+    }
+    .draft-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 0 2px 6px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 78px;
+      resize: none;
+      border: 1px solid var(--divider);
+      border-radius: 16px;
+      padding: 12px;
+      color: var(--ink);
+      font: 500 14px/1.42 Inter, sans-serif;
+      background: #fffdf9;
+      outline: none;
+    }
+    textarea:focus { border-color: rgba(128,0,32,.45); box-shadow: 0 0 0 4px var(--rose-soft); }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 9px;
+      margin-top: 10px;
+    }
+    .sms, .done, .secondary {
+      border: 0;
+      border-radius: 15px;
+      padding: 12px 13px;
+      font-weight: 750;
+      font-size: 13px;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+    .sms { background: var(--rose); color: white; }
+    .done { background: #f2eee8; color: var(--body); }
+    .secondary { background: transparent; color: var(--muted); padding: 8px 2px 0; text-align: left; }
+    .completed {
+      opacity: .68;
+      background: #fbfaf8;
+    }
+    .completed .done { background: rgba(33,122,87,.12); color: var(--ok); }
+    .footer {
+      padding: 18px 20px 24px;
+      border-top: 1px solid var(--divider);
+      color: var(--muted);
+      font-size: 12px;
+      background: #fff8ef;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      pointer-events: none;
+      transition: .22s ease;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width: 460px) {
+      .page { padding: 0; }
+      .phone { min-height: 100vh; border-radius: 0; border: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="phone" aria-label="Birthday SMS drafter sample">
+      <header class="topbar">
+        <div class="brand"><span class="dot"></span> Sunday</div>
+        <div class="date-pill">John Lim · Today</div>
+      </header>
+
+      <section class="hero">
+        <div class="eyebrow">Relationship moments</div>
+        <h1>3 birthday texts are ready.</h1>
+        <p class="subtitle">Sunday drafted each message in the client’s language. John reviews, taps, and sends from his own phone.</p>
+      </section>
+
+      <section class="stats" aria-label="Summary">
+        <div class="stat"><strong>3</strong><span>today</span></div>
+        <div class="stat"><strong>2</strong><span>languages</span></div>
+        <div class="stat"><strong>0</strong><span>sent</span></div>
+      </section>
+
+      <nav class="tabs" aria-label="Filters">
+        <button class="tab active" data-filter="today">Today</button>
+        <button class="tab" data-filter="week">This week</button>
+        <button class="tab" data-filter="done">Done</button>
+      </nav>
+
+      <section class="list">
+        <article class="card" data-group="today" data-phone="+14165550184">
+          <div class="person">
+            <div>
+              <div class="name">Sarah Kim</div>
+              <div class="meta">Birthday today · Past buyer · Family in North York</div>
+            </div>
+            <span class="lang">English</span>
+          </div>
+          <div class="note">Context: Sarah prefers short texts. Mention family only if natural.</div>
+          <div class="draft-label"><span>Draft SMS</span><span>Humanized</span></div>
+          <textarea>Happy birthday Sarah 🎂 Hope today’s a really good one for you.</textarea>
+          <div class="actions">
+            <a class="sms" href="#">Text from my phone</a>
+            <button class="done">Mark sent</button>
+          </div>
+          <button class="secondary">Regenerate softer</button>
+        </article>
+
+        <article class="card" data-group="today" data-phone="+14165550291">
+          <div class="person">
+            <div>
+              <div class="name">민지 Park</div>
+              <div class="meta">Birthday today · Seller lead · Korean preferred</div>
+            </div>
+            <span class="lang">Korean</span>
+          </div>
+          <div class="note">Context: Responded in Korean last time. Keep it warm and respectful.</div>
+          <div class="draft-label"><span>Draft SMS</span><span>Language matched</span></div>
+          <textarea>민지님 생일 축하드려요 🎂 오늘 따뜻하고 좋은 하루 보내세요.</textarea>
+          <div class="actions">
+            <a class="sms" href="#">Text from my phone</a>
+            <button class="done">Mark sent</button>
+          </div>
+          <button class="secondary">Make it more casual</button>
+        </article>
+
+        <article class="card" data-group="today" data-phone="+14165550377">
+          <div class="person">
+            <div>
+              <div class="name">Wei Chen</div>
+              <div class="meta">Birthday today · Investor · Mandarin detected</div>
+            </div>
+            <span class="lang">Chinese</span>
+          </div>
+          <div class="note">Context: Looking for investment property later this year. No sales pitch today.</div>
+          <div class="draft-label"><span>Draft SMS</span><span>No pitch</span></div>
+          <textarea>Wei，生日快乐 🎂 希望你今天过得开心。</textarea>
+          <div class="actions">
+            <a class="sms" href="#">Text from my phone</a>
+            <button class="done">Mark sent</button>
+          </div>
+          <button class="secondary">Regenerate warmer</button>
+        </article>
+      </section>
+
+      <footer class="footer">
+        SMS opens as a native draft using <strong>sms:number?body=</strong>. Nothing is sent automatically. Sunday logs completion only after John taps “Mark sent.”
+      </footer>
+    </section>
+  </main>
+  <div class="toast" id="toast">Marked as sent</div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+    function refreshSmsLinks() {
+      document.querySelectorAll('.card').forEach(card => {
+        const phone = card.dataset.phone;
+        const body = card.querySelector('textarea').value.trim();
+        const link = card.querySelector('.sms');
+        link.href = `sms:${phone}?body=${encodeURIComponent(body)}`;
+      });
+    }
+    document.querySelectorAll('textarea').forEach(t => t.addEventListener('input', refreshSmsLinks));
+    document.querySelectorAll('.sms').forEach(a => {
+      a.addEventListener('click', () => showToast('Opening SMS draft'));
+    });
+    document.querySelectorAll('.done').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.card');
+        card.classList.toggle('completed');
+        btn.textContent = card.classList.contains('completed') ? 'Sent' : 'Mark sent';
+        showToast(card.classList.contains('completed') ? 'Marked as sent' : 'Marked as pending');
+      });
+    });
+    document.querySelectorAll('.secondary').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.card');
+        const area = card.querySelector('textarea');
+        if (area.value.includes('Sarah')) area.value = "Happy birthday Sarah 🎂 Hope you get a quiet moment to enjoy today.";
+        else if (area.value.includes('민지')) area.value = "민지님 생일 축하드려요 🎂 오늘 기분 좋은 일 많은 하루 보내세요.";
+        else area.value = "Wei，生日快乐 🎂 祝你今天一切顺心。";
+        refreshSmsLinks();
+        showToast('Draft refreshed');
+      });
+    });
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        showToast(tab.textContent.trim() + ' view');
+      });
+    });
+    refreshSmsLinks();
+  </script>
+</body>
+</html>
